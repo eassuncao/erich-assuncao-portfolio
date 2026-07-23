@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | Erich Assuncao",
     },
     description:
-      "Portfolio of Erich Assuncao, a software developer and information systems professional delivering practical .NET, React, API, PostgreSQL, testing, and data solutions.",
+      "Portfolio of Erich Assuncao, a software and information systems professional combining production technology experience with psychology, counselling, and interpretation across complex human contexts.",
     keywords: [
       "Erich Assuncao",
       "software developer",
@@ -34,9 +34,10 @@ export async function generateMetadata(): Promise<Metadata> {
       ".NET",
       "React",
       "PostgreSQL",
-      "Edmonton technology",
+      "Canada software developer",
       "application analyst",
       "QA automation",
+      "human-centred technology",
     ],
     authors: [{ name: "Erich Assuncao" }],
     creator: "Erich Assuncao",
@@ -53,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Erich Assuncao — Portfolio",
       title: "Practical technology. Reliable systems. Human-centred outcomes.",
       description:
-        "Production software, information systems, data, testing, and applied research by Erich Assuncao.",
+        "Production software and information systems, informed by psychology, counselling, and more than a decade of professional interpretation.",
       images: [
         {
           url: new URL("/og.png", metadataBase).toString(),

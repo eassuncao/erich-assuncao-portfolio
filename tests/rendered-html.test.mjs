@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
@@ -41,6 +41,16 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /User Connections &amp; Discovery/);
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /href="\/erich-assuncao-resume\.pdf"/);
+  assert.match(html, /Open across Canada/);
+  assert.match(html, /Counsellor \/ Psychotherapy-Informed Practitioner/);
+  assert.match(
+    html,
+    /healthcare, legal, community[\s\S]*social work,[\s\S]*education settings/i,
+  );
+  assert.doesNotMatch(
+    html,
+    /Edmonton|Alberta first|Ontario second|53\.5461|113\.4937/i,
+  );
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/);
 });
 
@@ -57,4 +67,13 @@ test("ships every public case study and social card", async () => {
   ];
 
   await Promise.all(files.map((file) => access(new URL(file, projectRoot))));
+});
+
+test("downloadable resume matches the updated PDF in Documents", async () => {
+  const [sourceResume, publicResume] = await Promise.all([
+    readFile(new URL("Documents/Erich_Assuncao_General_Technology_Resume.pdf", projectRoot)),
+    readFile(new URL("public/erich-assuncao-resume.pdf", projectRoot)),
+  ]);
+
+  assert.deepEqual(publicResume, sourceResume);
 });

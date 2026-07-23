@@ -140,7 +140,7 @@ export default function Home() {
 
         <a className="header-status" href="#contact">
           <span aria-hidden="true" />
-          Edmonton bound
+          Open across Canada
         </a>
       </header>
 
@@ -162,9 +162,9 @@ export default function Home() {
             </h1>
             <p className="hero-intro">
               I build and improve production software across{" "}
-              <strong>.NET, React, APIs, and PostgreSQL</strong>—from architecture
-              through delivery. Canadian–Brazilian dual citizen, relocating to
-              Edmonton.
+              <strong>.NET, React, APIs, and PostgreSQL</strong>—bringing together
+              technical experience, psychology and counselling, and more than a
+              decade of professional interpretation.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#work">
@@ -180,7 +180,7 @@ export default function Home() {
             </div>
             <p className="availability">
               <span aria-hidden="true">+</span>
-              Open to software, systems, implementation, and quality roles
+              Canada · Open to on-site, hybrid, or remote opportunities
             </p>
           </div>
 
@@ -189,8 +189,8 @@ export default function Home() {
             <div className="signal-orbit orbit-two" aria-hidden="true" />
             <span className="signal-node node-one" aria-hidden="true" />
             <span className="signal-node node-two" aria-hidden="true" />
-            <p className="coordinate-label" aria-hidden="true">
-              53.5461° N / 113.4937° W
+            <p className="coordinate-label">
+              Technology · Human understanding
             </p>
 
             <div className="portrait-frame">
@@ -244,9 +244,9 @@ export default function Home() {
             <span>3.97 / 4.00 graduate GPA</span>
           </div>
           <div>
-            <small>Communication</small>
-            <strong>English + Portuguese</strong>
-            <span>Fluent, cross-cultural practice</span>
+            <small>Human context</small>
+            <strong>Interpretation + counselling</strong>
+            <span>Complex settings, careful communication</span>
           </div>
         </section>
 
@@ -318,11 +318,12 @@ export default function Home() {
         <section className="approach-section section-shell" id="approach">
           <div className="approach-copy">
             <p className="section-index">02 / How I work</p>
-            <h2>From ambiguity to an accountable system.</h2>
+            <h2>From human context to an accountable system.</h2>
             <p>
-              My strongest work connects technical depth with operational clarity.
-              I want the model, interface, test suite, and explanation to tell the
-              same story.
+              My strongest work connects technical depth with an understanding of
+              how people communicate, decide, and navigate complex situations. I
+              want the model, interface, test suite, and explanation to tell the
+              same clear story.
             </p>
           </div>
 
@@ -361,26 +362,28 @@ export default function Home() {
         <section className="profile-section section-shell" id="background">
           <div className="profile-heading">
             <p className="section-index">03 / Profile</p>
-            <h2>Technology, thoughtfully delivered.</h2>
+            <h2>Technology fluency. Human understanding.</h2>
           </div>
 
           <div className="profile-grid">
             <div className="profile-story">
               <p className="profile-lead">
-                I am an early-career software and information-systems professional
-                with production full-stack experience and a broader background in
-                psychology, research, interpretation, client work, and operations.
+                Three perspectives shape how I work: hands-on technology
+                experience, the study and practice of psychology and counselling,
+                and more than a decade of professional interpretation across
+                complex human settings.
               </p>
               <p>
-                That combination makes me especially effective where code meets
-                people and process: application and systems analysis, software
-                development, implementation, integration, QA automation, and
-                technically substantive product support.
+                Interpretation has shown me how healthcare, legal, community and
+                social services, and education systems meet people at consequential
+                moments. Psychology and counselling trained me to listen closely,
+                recognize context, and explain complex information with care.
               </p>
               <p>
-                I value clear standards, useful outcomes, privacy-conscious design,
-                dependable follow-through, and communication that helps different
-                stakeholders understand the same system.
+                Technology gives me the tools to turn that perspective into
+                dependable software, thoughtful systems, clear analysis, and
+                practical support. That combination is especially valuable wherever
+                software, systems, and people intersect.
               </p>
 
               <div className="seeking-card">
@@ -391,7 +394,7 @@ export default function Home() {
                     Sustainable technology work with ownership and room to grow
                   </strong>
                   <p>
-                    Alberta first · Ontario second · Canada-wide remote
+                    Canada · On-site, hybrid, or remote
                   </p>
                 </div>
               </div>
@@ -412,7 +415,7 @@ export default function Home() {
             <div className="timeline-column">
               <p className="panel-label">Selected experience</p>
               <article className="timeline-item">
-                <span>2024—2026</span>
+                <span>2024—Present</span>
                 <div>
                   <h3>Software Engineer · iQuirium</h3>
                   <p>
@@ -422,12 +425,24 @@ export default function Home() {
                 </div>
               </article>
               <article className="timeline-item">
-                <span>2014—Now</span>
+                <span>2022—Present</span>
                 <div>
-                  <h3>Interpreter &amp; independent client work</h3>
+                  <h3>Counsellor / Psychotherapy-Informed Practitioner</h3>
                   <p>
-                    Professional English–Portuguese interpretation and structured,
-                    confidential client support across complex contexts.
+                    Provide structured, confidential support in English and
+                    Portuguese, with careful listening, organized documentation, and
+                    clear explanations of complex information.
+                  </p>
+                </div>
+              </article>
+              <article className="timeline-item">
+                <span>2014—Present</span>
+                <div>
+                  <h3>English–Portuguese Interpreter</h3>
+                  <p>
+                    Professional interpretation across healthcare, legal, community
+                    and social work, and education settings—requiring accuracy,
+                    confidentiality, rapid comprehension, and clear communication.
                   </p>
                 </div>
               </article>
@@ -512,7 +527,7 @@ export default function Home() {
             Thoughtfully delivered.
           </p>
         </div>
-        <p>Edmonton, Alberta · 2026</p>
+        <p>Canada · 2026</p>
         <a href="#top">Back to top ↑</a>
       </footer>
 
