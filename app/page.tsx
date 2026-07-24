@@ -201,7 +201,7 @@ export default function Home() {
                 href="/erich-assuncao-resume.pdf"
                 download
               >
-                Download résumé <span aria-hidden="true">↗</span>
+                Download résumé (PDF) <span aria-hidden="true">↓</span>
               </a>
             </div>
             <p className="availability">
@@ -210,7 +210,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="hero-visual" aria-label="Portrait and featured work">
+          <div className="hero-visual">
             <div className="signal-orbit orbit-one" aria-hidden="true" />
             <div className="signal-orbit orbit-two" aria-hidden="true" />
             <span className="signal-node node-one" aria-hidden="true" />
@@ -234,10 +234,10 @@ export default function Home() {
               href="/projects/user-connections-discovery.pdf"
               target="_blank"
               rel="noreferrer"
-              aria-label="Read the User Connections and Discovery case study PDF"
+              aria-label="Read the User Connections and Discovery case study PDF (opens in a new tab)"
             >
               <span className="featured-label">Featured production work</span>
-              <span className="featured-index">Case study 01</span>
+              <span className="featured-index">Case study 01 · PDF</span>
               <strong>User Connections &amp; Discovery</strong>
               <small>
                 A tested, full-stack social discovery capability designed around
@@ -289,55 +289,69 @@ export default function Home() {
           </div>
 
           <div className="project-grid">
-            {projects.map((project) => (
-              <article
-                className={`project-card${project.featured ? " project-featured" : ""}`}
-                key={project.number}
-              >
-                <a
-                  className="project-cover"
-                  href={project.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Open ${project.title} case study PDF`}
+            {projects.map((project, index) => {
+              // Card 01 spans both desktop columns, so indexes 2, 4, and 6
+              // are the cards that land in the right column.
+              const isDesktopRightColumn = index > 0 && index % 2 === 0;
+
+              return (
+                <article
+                  className={[
+                    "project-card",
+                    project.featured ? "project-featured" : "",
+                    isDesktopRightColumn ? "project-card-desktop-right" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  key={project.number}
                 >
-                  <img
-                    src={project.cover}
-                    alt={`Cover of the ${project.title} case study`}
-                    width="990"
-                    height="1400"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <span className="project-number">{project.number}</span>
-                  <span className="cover-action" aria-hidden="true">
-                    Open PDF ↗
-                  </span>
-                </a>
-                <div className="project-content">
-                  <p className="project-eyebrow">{project.eyebrow}</p>
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <p className="project-result">
-                    <span aria-hidden="true">+</span>
-                    {project.result}
-                  </p>
-                  <ul className="tag-list" aria-label="Technologies and methods">
-                    {project.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
                   <a
-                    className="text-link"
+                    className="project-cover"
                     href={project.href}
                     target="_blank"
                     rel="noreferrer"
+                    aria-label={`Open ${project.title} case study PDF (opens in a new tab)`}
                   >
-                    Read case study <span aria-hidden="true">↗</span>
+                    <img
+                      src={project.cover}
+                      alt={`Cover of the ${project.title} case study`}
+                      width="990"
+                      height="1400"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span className="project-number">{project.number}</span>
+                    <span className="cover-action" aria-hidden="true">
+                      Open PDF ↗
+                    </span>
                   </a>
-                </div>
-              </article>
-            ))}
+                  <div className="project-content">
+                    <p className="project-eyebrow">{project.eyebrow}</p>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <p className="project-result">
+                      <span aria-hidden="true">+</span>
+                      {project.result}
+                    </p>
+                    <ul className="tag-list" aria-label="Technologies and methods">
+                      {project.tags.map((tag) => (
+                        <li key={tag}>{tag}</li>
+                      ))}
+                    </ul>
+                    <a
+                      className="text-link"
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Read case study (PDF)
+                      <span aria-hidden="true">↗</span>
+                      <span className="sr-only"> Opens in a new tab.</span>
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -353,11 +367,13 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="delivery-map" aria-label="Delivery approach">
+          <div className="delivery-map">
             <div className="map-track" aria-hidden="true" />
             <article>
               <span>01</span>
-              <div className="approach-icon">M</div>
+              <div className="approach-icon" aria-hidden="true">
+                M
+              </div>
               <h3>Model the system</h3>
               <p>
                 Clarify the actors, states, data, constraints, and success criteria
@@ -366,7 +382,9 @@ export default function Home() {
             </article>
             <article>
               <span>02</span>
-              <div className="approach-icon">B</div>
+              <div className="approach-icon" aria-hidden="true">
+                B
+              </div>
               <h3>Build across boundaries</h3>
               <p>
                 Connect database, domain, API, interface, and documentation as one
@@ -375,7 +393,9 @@ export default function Home() {
             </article>
             <article>
               <span>03</span>
-              <div className="approach-icon">P</div>
+              <div className="approach-icon" aria-hidden="true">
+                P
+              </div>
               <h3>Prove the behaviour</h3>
               <p>
                 Test the rules and journeys that matter, then leave the work easier
@@ -526,6 +546,7 @@ export default function Home() {
               rel="noreferrer"
             >
               LinkedIn <span aria-hidden="true">↗</span>
+              <span className="sr-only"> Opens in a new tab.</span>
             </a>
             <a
               className="button button-secondary"
@@ -534,6 +555,7 @@ export default function Home() {
               rel="noreferrer"
             >
               GitHub <span aria-hidden="true">↗</span>
+              <span className="sr-only"> Opens in a new tab.</span>
             </a>
           </div>
           <a className="email-line" href="mailto:erichassuncao@gmail.com">

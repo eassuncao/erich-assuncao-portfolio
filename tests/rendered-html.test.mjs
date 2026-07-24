@@ -43,6 +43,9 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /188 automated tests with zero external runtime dependencies/);
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /href="\/erich-assuncao-resume\.pdf"/);
+  assert.match(html, /Download résumé \(PDF\)/);
+  assert.match(html, /Read case study \(PDF\)/);
+  assert.match(html, /Opens in a new tab\./);
   assert.match(html, /Let's connect/);
   assert.match(html, /Counsellor \/ Psychotherapy-Informed Practitioner/);
   assert.match(
@@ -52,6 +55,32 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.doesNotMatch(
     html,
     /Edmonton|Alberta first|Ontario second|53\.5461|113\.4937/i,
+  );
+  const navigation = html.match(
+    /<nav[^>]*class="site-nav"[^>]*>([\s\S]*?)<\/nav>/i,
+  );
+  assert.ok(navigation, "primary navigation should be rendered");
+
+  const navigationFragments = [
+    ...navigation[1].matchAll(/href="#([^"]+)"/g),
+  ].map((match) => match[1]);
+  assert.deepEqual(navigationFragments, [
+    "work",
+    "approach",
+    "background",
+    "contact",
+  ]);
+  for (const fragment of navigationFragments) {
+    assert.match(html, new RegExp(`id="${fragment}"`));
+  }
+
+  assert.match(
+    html,
+    /class="approach-icon" aria-hidden="true">[\s\S]*?M[\s\S]*?<\/div>/,
+  );
+  assert.doesNotMatch(
+    html,
+    /class="(?:hero-visual|delivery-map)" aria-label=/,
   );
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/);
 });
