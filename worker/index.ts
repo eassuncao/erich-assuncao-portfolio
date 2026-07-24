@@ -5,12 +5,17 @@ import type {
   ImagesBinding,
   ImageOutputOptions,
 } from "@cloudflare/workers-types";
-import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
+import {
+  handleImageOptimization,
+  DEFAULT_DEVICE_SIZES,
+  DEFAULT_IMAGE_SIZES,
+  type ImageHandlers,
+} from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 
 interface Env {
   ASSETS: Fetcher;
-  IMAGES: ImagesBinding;
+  IMAGES?: ImagesBinding;
 }
 
 const PORTFOLIO_IMAGE_WIDTHS = [978, 1082];
@@ -21,6 +26,20 @@ const ALLOWED_IMAGE_WIDTHS = [
     ...PORTFOLIO_IMAGE_WIDTHS,
   ]),
 ];
+
+const IMAGE_CONTENT_TYPES_BY_EXTENSION = new Map([
+  [".avif", "image/avif"],
+  [".bmp", "image/bmp"],
+  [".gif", "image/gif"],
+  [".ico", "image/vnd.microsoft.icon"],
+  [".jpeg", "image/jpeg"],
+  [".jpg", "image/jpeg"],
+  [".png", "image/png"],
+  [".svg", "image/svg+xml"],
+  [".tif", "image/tiff"],
+  [".tiff", "image/tiff"],
+  [".webp", "image/webp"],
+]);
 
 function toImageOutputFormat(format: string): ImageOutputOptions["format"] {
   switch (format) {
@@ -37,8 +56,77 @@ function toImageOutputFormat(format: string): ImageOutputOptions["format"] {
   }
 }
 
-function withSecurityHeaders(response: Response): Response {
+function normalizeImageAssetContentType(
+  response: Response,
+  assetPath: string,
+): Response {
+  const upstreamContentType = response.headers
+    .get("Content-Type")
+    ?.split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+
+  if (
+    upstreamContentType &&
+    upstreamContentType !== "application/octet-stream"
+  ) {
+    return response;
+  }
+
+  const normalizedPath = assetPath.toLowerCase().split(/[?#]/, 1)[0];
+  const extension = [...IMAGE_CONTENT_TYPES_BY_EXTENSION.keys()].find(
+    (candidate) => normalizedPath.endsWith(candidate),
+  );
+  const fallbackContentType = extension
+    ? IMAGE_CONTENT_TYPES_BY_EXTENSION.get(extension)
+    : undefined;
+
+  if (!fallbackContentType) {
+    return response;
+  }
+
   const headers = new Headers(response.headers);
+  headers.set("Content-Type", fallbackContentType);
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+function createImageHandlers(request: Request, env: Env): ImageHandlers {
+  const imageHandlers: ImageHandlers = {
+    fetchAsset: async (path) =>
+      normalizeImageAssetContentType(
+        await env.ASSETS.fetch(new Request(new URL(path, request.url))),
+        path,
+      ),
+  };
+
+  if (typeof env.IMAGES?.input === "function") {
+    imageHandlers.transformImage = async (
+      body,
+      { width, format, quality },
+    ) => {
+      const result = await env.IMAGES!.input(body)
+        .transform(width > 0 ? { width } : {})
+        .output({ format: toImageOutputFormat(format), quality });
+      return result.response();
+    };
+  }
+
+  return imageHandlers;
+}
+
+function withSecurityHeaders(
+  response: Response,
+  assetPath?: string,
+): Response {
+  const normalizedResponse = assetPath
+    ? normalizeImageAssetContentType(response, assetPath)
+    : response;
+  const headers = new Headers(normalizedResponse.headers);
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set(
@@ -46,9 +134,9 @@ function withSecurityHeaders(response: Response): Response {
     "camera=(), geolocation=(), microphone=()",
   );
 
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
+  return new Response(normalizedResponse.body, {
+    status: normalizedResponse.status,
+    statusText: normalizedResponse.statusText,
     headers,
   });
 }
@@ -66,23 +154,17 @@ const worker = {
     if (url.pathname === "/_vinext/image") {
       const response = await handleImageOptimization(
         request,
-        {
-          fetchAsset: (path) =>
-            env.ASSETS.fetch(new Request(new URL(path, request.url))),
-          transformImage: async (body, { width, format, quality }) => {
-            const result = await env.IMAGES.input(body)
-              .transform(width > 0 ? { width } : {})
-              .output({ format: toImageOutputFormat(format), quality });
-            return result.response();
-          },
-        },
+        createImageHandlers(request, env),
         ALLOWED_IMAGE_WIDTHS,
       );
 
       return withSecurityHeaders(response);
     }
 
-    return withSecurityHeaders(await handler.fetch(request, env, ctx));
+    return withSecurityHeaders(
+      await handler.fetch(request, env, ctx),
+      url.pathname,
+    );
   },
 };
 

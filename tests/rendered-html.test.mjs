@@ -4,10 +4,27 @@ import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
 
-async function render(pathname = "/", requestHeaders = {}) {
+async function render(
+  pathname = "/",
+  requestHeaders = {},
+  { includeImagesBinding = true } = {},
+) {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
+
+  const imagesBinding = {
+    input: (body) => ({
+      transform: () => ({
+        output: async ({ format }) => ({
+          response: () =>
+            new Response(body, {
+              headers: { "content-type": format },
+            }),
+        }),
+      }),
+    }),
+  };
 
   return worker.fetch(
     new Request(new URL(pathname, "http://localhost"), {
@@ -20,9 +37,16 @@ async function render(pathname = "/", requestHeaders = {}) {
       ASSETS: {
         fetch: async (request) => {
           const assetPath = new URL(request.url).pathname;
+          if (assetPath === "/images/unrelated.bin") {
+            return new Response(new Uint8Array([0, 1, 2, 3]), {
+              headers: { "content-type": "application/octet-stream" },
+            });
+          }
+
           if (
             !assetPath.startsWith("/images/") &&
-            !assetPath.startsWith("/project-covers/")
+            !assetPath.startsWith("/project-covers/") &&
+            assetPath !== "/erich-assuncao-resume.pdf"
           ) {
             return new Response("Not found", { status: 404 });
           }
@@ -31,26 +55,17 @@ async function render(pathname = "/", requestHeaders = {}) {
             new URL(`public${assetPath}`, projectRoot),
           );
           const contentType = assetPath.endsWith(".webp")
-            ? "image/webp"
-            : "image/png";
+            ? "application/octet-stream"
+            : assetPath.endsWith(".pdf")
+              ? "application/pdf"
+              : "image/png";
 
           return new Response(asset, {
             headers: { "content-type": contentType },
           });
         },
       },
-      IMAGES: {
-        input: (body) => ({
-          transform: () => ({
-            output: async ({ format }) => ({
-              response: () =>
-                new Response(body, {
-                  headers: { "content-type": format },
-                }),
-            }),
-          }),
-        }),
-      },
+      IMAGES: includeImagesBinding ? imagesBinding : undefined,
     },
     {
       waitUntil() {},
@@ -254,9 +269,35 @@ test("configures and serves optimized images at their intrinsic widths", async (
   assert.equal(workerConfig.assets?.binding, "ASSETS");
   assert.equal(workerConfig.images?.binding, "IMAGES");
 
-  for (const [source, width] of [
-    ["/images/erich-assuncao-portrait.webp", 978],
-    ["/project-covers/fasta-inspector-bioinformatics.png", 1082],
+  const staticHeaders = await readFile(
+    new URL("dist/client/_headers", projectRoot),
+    "utf8",
+  );
+  assert.match(staticHeaders, /\/assets\/\*/);
+  assert.match(
+    staticHeaders,
+    /\/images\/\*\.webp\s+Content-Type: image\/webp/i,
+  );
+
+  const directPortrait = await render(
+    "/images/erich-assuncao-portrait.webp",
+    { accept: "image/webp,image/*" },
+  );
+  assert.equal(directPortrait.status, 200);
+  assert.equal(directPortrait.headers.get("content-type"), "image/webp");
+  assert.equal(
+    directPortrait.headers.get("x-content-type-options"),
+    "nosniff",
+  );
+  assert.ok((await directPortrait.arrayBuffer()).byteLength > 0);
+
+  const directResume = await render("/erich-assuncao-resume.pdf");
+  assert.equal(directResume.status, 200);
+  assert.equal(directResume.headers.get("content-type"), "application/pdf");
+
+  for (const [source, width, includeImagesBinding] of [
+    ["/images/erich-assuncao-portrait.webp", 978, false],
+    ["/project-covers/fasta-inspector-bioinformatics.png", 1082, true],
   ]) {
     const parameters = new URLSearchParams({
       url: source,
@@ -265,6 +306,8 @@ test("configures and serves optimized images at their intrinsic widths", async (
     });
     const response = await render(`/_vinext/image?${parameters}`, {
       accept: "image/webp,image/*",
+    }, {
+      includeImagesBinding,
     });
 
     assert.equal(response.status, 200);
@@ -272,6 +315,22 @@ test("configures and serves optimized images at their intrinsic widths", async (
     assert.equal(response.headers.get("x-content-type-options"), "nosniff");
     assert.ok((await response.arrayBuffer()).byteLength > 0);
   }
+
+  const unrelatedBinaryParameters = new URLSearchParams({
+    url: "/images/unrelated.bin",
+    w: "978",
+    q: "82",
+  });
+  const unrelatedBinaryResponse = await render(
+    `/_vinext/image?${unrelatedBinaryParameters}`,
+    { accept: "image/webp,image/*" },
+    { includeImagesBinding: false },
+  );
+  assert.equal(unrelatedBinaryResponse.status, 400);
+  assert.match(
+    unrelatedBinaryResponse.headers.get("content-type") ?? "",
+    /^text\/plain\b/i,
+  );
 });
 
 test("ships a valid downloadable resume", async () => {
