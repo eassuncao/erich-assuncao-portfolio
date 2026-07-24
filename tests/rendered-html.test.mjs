@@ -169,7 +169,6 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   ].map((match) => match[1]);
   assert.deepEqual(navigationFragments, [
     "work",
-    "approach",
     "background",
     "contact",
   ]);
@@ -177,18 +176,11 @@ test("server-renders Erich Assuncao's portfolio", async () => {
     assert.match(html, new RegExp(`id="${fragment}"`));
   }
 
-  for (const icon of ["M", "B", "P"]) {
-    assert.match(
-      html,
-      new RegExp(
-        `class="approach-icon" aria-hidden="true">[\\s\\S]*?${icon}[\\s\\S]*?<\\/div>`,
-      ),
-    );
-  }
   assert.doesNotMatch(
     html,
-    /class="(?:hero-visual|delivery-map)" aria-label=/,
+    /id="approach"|>Approach<|From human context to an accountable system|class="delivery-map"/,
   );
+  assert.doesNotMatch(html, /class="hero-visual" aria-label=/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|SkeletonPreview/);
 });
 

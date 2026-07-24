@@ -1,4 +1,3 @@
-import { Approach } from "../components/sections/Approach";
 import { Contact } from "../components/sections/Contact";
 import { Hero } from "../components/sections/Hero";
 import { Profile } from "../components/sections/Profile";
@@ -48,7 +47,6 @@ export default function Home() {
       <main id="main">
         <Hero />
         <Work />
-        <Approach />
         <Profile />
         <Contact />
       </main>

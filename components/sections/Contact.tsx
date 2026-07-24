@@ -4,7 +4,7 @@ export function Contact() {
   return (
     <section className="contact-section section-shell" id="contact">
       <div className="contact-glow" aria-hidden="true" />
-      <p className="section-index">04 / Start a conversation</p>
+      <p className="section-index">03 / Start a conversation</p>
       <h2>
         Looking for someone who can connect
         <br />

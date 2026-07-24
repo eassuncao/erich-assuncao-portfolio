@@ -556,7 +556,6 @@ a {
 }
 
 .work-section,
-.approach-section,
 .profile-section {
   padding-block: 9rem;
 }
@@ -570,7 +569,6 @@ a {
 }
 
 .section-heading h2,
-.approach-copy h2,
 .profile-heading h2,
 .contact-section h2 {
   margin: 0.7rem 0 0;
@@ -773,82 +771,6 @@ a {
 
 .text-link:hover span {
   transform: translate(3px, -3px);
-}
-
-.approach-section {
-  display: grid;
-  grid-template-columns: 0.72fr 1.28fr;
-  align-items: center;
-  border-top: 1px solid var(--line);
-  gap: 6rem;
-}
-
-.approach-copy > p:last-child {
-  max-width: 33rem;
-  margin: 1.8rem 0 0;
-  color: var(--muted);
-}
-
-.delivery-map {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.map-track {
-  position: absolute;
-  top: 3.5rem;
-  right: 10%;
-  left: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, var(--blue), var(--cyan), var(--mint));
-  opacity: 0.45;
-}
-
-.delivery-map article {
-  position: relative;
-  min-height: 21rem;
-  padding: 1.5rem;
-  border: 1px solid var(--line);
-  border-radius: 0.45rem;
-  background: rgba(11, 29, 47, 0.46);
-}
-
-.delivery-map article > span {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  color: #6c8696;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
-}
-
-.approach-icon {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  width: 4rem;
-  height: 4rem;
-  place-items: center;
-  border: 1px solid rgba(105, 230, 255, 0.35);
-  border-radius: 50%;
-  background: var(--canvas-soft);
-  color: var(--cyan);
-  font-family: var(--font-geist-mono), monospace;
-  font-weight: 800;
-}
-
-.delivery-map h3 {
-  margin: 3rem 0 0.8rem;
-  font-size: 1.15rem;
-  letter-spacing: -0.025em;
-}
-
-.delivery-map p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.82rem;
 }
 
 .profile-section {
@@ -1090,9 +1012,6 @@ a {
     min-height: 18rem;
   }
 
-  .approach-section {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 900px) {
@@ -1282,7 +1201,6 @@ a {
   }
 
   .work-section,
-  .approach-section,
   .profile-section {
     padding-block: 6.5rem;
   }
@@ -1292,7 +1210,6 @@ a {
   }
 
   .section-heading h2,
-  .approach-copy h2,
   .profile-heading h2,
   .contact-section h2 {
     font-size: clamp(2.6rem, 12vw, 4rem);
@@ -1310,18 +1227,6 @@ a {
 
   .project-content h3 {
     font-size: 2rem;
-  }
-
-  .delivery-map {
-    grid-template-columns: 1fr;
-  }
-
-  .map-track {
-    display: none;
-  }
-
-  .delivery-map article {
-    min-height: auto;
   }
 
   .profile-grid,

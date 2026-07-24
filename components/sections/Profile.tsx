@@ -9,7 +9,7 @@ export function Profile() {
   return (
     <section className="profile-section section-shell" id="background">
       <div className="profile-heading">
-        <p className="section-index">03 / Profile</p>
+        <p className="section-index">02 / Profile</p>
         <h2>Technology fluency. Human understanding.</h2>
       </div>
 

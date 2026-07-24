@@ -37,7 +37,6 @@ export const contactDetails = {
 
 export const navigationItems = [
   { label: "Work", href: "#work" },
-  { label: "Approach", href: "#approach" },
   { label: "Background", href: "#background" },
   { label: "Contact", href: "#contact" },
 ] as const;
@@ -161,30 +160,6 @@ export const evidenceItems: readonly LabelledDetail[] = [
     detail: "Complex settings, careful communication",
   },
 ];
-
-export const approachSteps = [
-  {
-    number: "01",
-    icon: "M",
-    title: "Model the system",
-    description:
-      "Clarify the actors, states, data, constraints, and success criteria before code spreads assumptions.",
-  },
-  {
-    number: "02",
-    icon: "B",
-    title: "Build across boundaries",
-    description:
-      "Connect database, domain, API, interface, and documentation as one coherent delivery.",
-  },
-  {
-    number: "03",
-    icon: "P",
-    title: "Prove the behaviour",
-    description:
-      "Test the rules and journeys that matter, then leave the work easier for the next person to understand.",
-  },
-] as const;
 
 export const skillGroups: readonly LabelledDetail[] = [
   {
