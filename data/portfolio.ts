@@ -7,6 +7,7 @@ export type Project = {
   readonly tags: readonly string[];
   readonly href: `/projects/${string}.pdf`;
   readonly cover: `/project-covers/${string}.png`;
+  readonly sourceHref?: `https://github.com/${string}`;
   readonly featured?: boolean;
   readonly featuredSummary?: string;
 };
@@ -132,6 +133,7 @@ export const projects: readonly Project[] = [
     tags: ["Python", "Bioinformatics", "FASTA", "CLI", "pytest"],
     href: "/projects/fasta-inspector-bioinformatics.pdf",
     cover: "/project-covers/fasta-inspector-bioinformatics.png",
+    sourceHref: "https://github.com/eassuncao/fasta_inspector",
   },
 ];
 

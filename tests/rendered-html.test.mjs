@@ -88,6 +88,13 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /href="\/erich-assuncao-resume\.pdf"/);
   assert.match(html, /Download résumé \(PDF\)/);
   assert.match(html, /Read case study \(PDF\)/);
+  const sourceLinks = [
+    ...html.matchAll(
+      /href="https:\/\/github\.com\/eassuncao\/fasta_inspector"/g,
+    ),
+  ];
+  assert.equal(sourceLinks.length, 1);
+  assert.match(html, /View source/);
   assert.match(html, /Opens in a new tab\./);
   assert.match(html, /Let's connect/);
   assert.match(html, /Counsellor \/ Psychotherapy-Informed Practitioner/);

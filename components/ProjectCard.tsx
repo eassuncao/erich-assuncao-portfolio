@@ -57,16 +57,33 @@ export function ProjectCard({
             <li key={tag}>{tag}</li>
           ))}
         </ul>
-        <a
-          className="text-link"
-          href={project.href}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Read case study (PDF)
-          <span aria-hidden="true">↗</span>
-          <span className="sr-only"> Opens in a new tab.</span>
-        </a>
+        <div className="project-links">
+          <a
+            className="text-link"
+            href={project.href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Read case study (PDF)
+            <span aria-hidden="true">↗</span>
+            <span className="sr-only"> Opens in a new tab.</span>
+          </a>
+          {project.sourceHref ? (
+            <a
+              className="text-link"
+              href={project.sourceHref}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View source
+              <span aria-hidden="true">↗</span>
+              <span className="sr-only">
+                {" "}
+                for {project.title}. Opens in a new tab.
+              </span>
+            </a>
+          ) : null}
+        </div>
       </div>
     </article>
   );
