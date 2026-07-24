@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
+import { contactDetails } from "../data/portfolio";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -22,13 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase,
     title: {
-      default: "Erich Assuncao | Software & Information Systems",
-      template: "%s | Erich Assuncao",
+      default: `${contactDetails.name} | Software & Information Systems`,
+      template: `%s | ${contactDetails.name}`,
     },
     description:
       "Portfolio of Erich Assuncao, a software and information systems professional combining production technology experience with psychology, counselling, and interpretation across complex human contexts.",
     keywords: [
-      "Erich Assuncao",
+      contactDetails.name,
       "software developer",
       "information systems",
       ".NET",
@@ -39,8 +40,8 @@ export async function generateMetadata(): Promise<Metadata> {
       "QA automation",
       "human-centred technology",
     ],
-    authors: [{ name: "Erich Assuncao" }],
-    creator: "Erich Assuncao",
+    authors: [{ name: contactDetails.name }],
+    creator: contactDetails.name,
     alternates: {
       canonical: "/",
     },
@@ -51,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       type: "profile",
       url: "/",
-      siteName: "Erich Assuncao — Portfolio",
+      siteName: `${contactDetails.name} — Portfolio`,
       title: "Practical technology. Reliable systems. Human-centred outcomes.",
       description:
         "Production software and information systems, informed by psychology, counselling, and more than a decade of professional interpretation.",
@@ -60,13 +61,13 @@ export async function generateMetadata(): Promise<Metadata> {
           url: new URL("/og.png", metadataBase).toString(),
           width: 1731,
           height: 909,
-          alt: "Erich Assuncao — Software Developer and Information Systems Professional",
+          alt: `${contactDetails.name} — ${contactDetails.professionalTitle}`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Erich Assuncao | Software & Information Systems",
+      title: `${contactDetails.name} | Software & Information Systems`,
       description:
         "Practical technology. Reliable systems. Human-centred outcomes.",
       images: [new URL("/og.png", metadataBase).toString()],
