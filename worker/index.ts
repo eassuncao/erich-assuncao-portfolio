@@ -13,6 +13,15 @@ interface Env {
   IMAGES: ImagesBinding;
 }
 
+const PORTFOLIO_IMAGE_WIDTHS = [978, 1082];
+const ALLOWED_IMAGE_WIDTHS = [
+  ...new Set([
+    ...DEFAULT_DEVICE_SIZES,
+    ...DEFAULT_IMAGE_SIZES,
+    ...PORTFOLIO_IMAGE_WIDTHS,
+  ]),
+];
+
 function toImageOutputFormat(format: string): ImageOutputOptions["format"] {
   switch (format) {
     case "image/jpeg":
@@ -55,7 +64,6 @@ const worker = {
     const url = new URL(request.url);
 
     if (url.pathname === "/_vinext/image") {
-      const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       const response = await handleImageOptimization(
         request,
         {
@@ -68,7 +76,7 @@ const worker = {
             return result.response();
           },
         },
-        allowedWidths,
+        ALLOWED_IMAGE_WIDTHS,
       );
 
       return withSecurityHeaders(response);

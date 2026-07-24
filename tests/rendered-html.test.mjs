@@ -18,7 +18,38 @@ async function render(pathname = "/", requestHeaders = {}) {
     }),
     {
       ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
+        fetch: async (request) => {
+          const assetPath = new URL(request.url).pathname;
+          if (
+            !assetPath.startsWith("/images/") &&
+            !assetPath.startsWith("/project-covers/")
+          ) {
+            return new Response("Not found", { status: 404 });
+          }
+
+          const asset = await readFile(
+            new URL(`public${assetPath}`, projectRoot),
+          );
+          const contentType = assetPath.endsWith(".webp")
+            ? "image/webp"
+            : "image/png";
+
+          return new Response(asset, {
+            headers: { "content-type": contentType },
+          });
+        },
+      },
+      IMAGES: {
+        input: (body) => ({
+          transform: () => ({
+            output: async ({ format }) => ({
+              response: () =>
+                new Response(body, {
+                  headers: { "content-type": format },
+                }),
+            }),
+          }),
+        }),
       },
     },
     {
@@ -210,6 +241,37 @@ test("uses the first trusted proxy host and protocol values", async () => {
     html,
     /property="og:image" content="https:\/\/portfolio\.example\/og\.jpg"/,
   );
+});
+
+test("configures and serves optimized images at their intrinsic widths", async () => {
+  const workerConfig = JSON.parse(
+    await readFile(
+      new URL("dist/server/wrangler.json", projectRoot),
+      "utf8",
+    ),
+  );
+
+  assert.equal(workerConfig.assets?.binding, "ASSETS");
+  assert.equal(workerConfig.images?.binding, "IMAGES");
+
+  for (const [source, width] of [
+    ["/images/erich-assuncao-portrait.webp", 978],
+    ["/project-covers/fasta-inspector-bioinformatics.png", 1082],
+  ]) {
+    const parameters = new URLSearchParams({
+      url: source,
+      w: String(width),
+      q: "82",
+    });
+    const response = await render(`/_vinext/image?${parameters}`, {
+      accept: "image/webp,image/*",
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("content-type"), "image/webp");
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.ok((await response.arrayBuffer()).byteLength > 0);
+  }
 });
 
 test("ships a valid downloadable resume", async () => {
