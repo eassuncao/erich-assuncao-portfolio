@@ -8,9 +8,7 @@ graduate research.
 
 ## Live site
 
-A public URL is not recorded in this repository yet. After the existing OpenAI
-Sites deployment is made public and its URL is verified, replace this note with
-the actual link.
+[View the live portfolio](https://erich-assuncao-portfolio.tzc7ckjmtb.chatgpt.site).
 
 ## Technology stack
 
