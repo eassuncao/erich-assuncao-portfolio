@@ -8,7 +8,7 @@ graduate research.
 
 ## Live site
 
-[View the live portfolio](https://erich-assuncao-portfolio.tzc7ckjmtb.chatgpt.site).
+[View the live portfolio](https://erichassuncao.com).
 
 ## Technology stack
 
@@ -28,10 +28,10 @@ Server Component rendering, application responses, assets, and image
 optimization. The local Sites build plugin packages the source according to
 `.openai/hosting.json`.
 
-This is not a static export: metadata remains request-aware so canonical and
-social URLs can use the verified deployment host. Supabase, application
-authentication, D1, and R2 are not used. The null D1 and R2 values in
-`.openai/hosting.json` are intentional OpenAI Sites configuration.
+This is not a static export. Canonical, social, sitemap, and crawler metadata
+use the permanent production origin at `https://erichassuncao.com`. Supabase,
+application authentication, D1, and R2 are not used. The null D1 and R2 values
+in `.openai/hosting.json` are intentional OpenAI Sites configuration.
 
 ## Local setup
 
@@ -72,7 +72,7 @@ On Windows PowerShell systems where the `npm.ps1` wrapper is restricted, use
 ## Project structure
 
 ```text
-app/                    Next.js layout, page, metadata, robots, and global CSS
+app/                    Next.js layout, page, metadata, sitemap, robots, and global CSS
 components/
   sections/             Major server-rendered page sections
   ProjectCard.tsx       Reusable project presentation

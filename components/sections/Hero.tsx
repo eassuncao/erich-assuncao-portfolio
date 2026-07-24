@@ -51,11 +51,7 @@ export function Hero() {
         </div>
 
         <div className="hero-visual">
-          <div className="signal-orbit orbit-one" aria-hidden="true" />
-          <div className="signal-orbit orbit-two" aria-hidden="true" />
-          <span className="signal-node node-one" aria-hidden="true" />
-          <span className="signal-node node-two" aria-hidden="true" />
-          <p className="coordinate-label">Technology · Human understanding</p>
+          <div className="signal-arc" aria-hidden="true" />
 
           <div className="portrait-frame">
             <Image

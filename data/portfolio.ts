@@ -12,6 +12,8 @@ export type Project = {
   readonly featuredSummary?: string;
 };
 
+export const siteOrigin = "https://erichassuncao.com" as const;
+
 type LabelledDetail = {
   readonly label: string;
   readonly value: string;

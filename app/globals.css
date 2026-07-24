@@ -377,7 +377,7 @@ a {
   aspect-ratio: 0.78;
   overflow: hidden;
   border: 1px solid rgba(105, 230, 255, 0.22);
-  border-radius: 50% 50% 0.25rem 0.25rem;
+  border-radius: 0.45rem;
   background: var(--surface);
   box-shadow: 0 1.5rem 5rem rgba(0, 0, 0, 0.4);
 }
@@ -396,55 +396,17 @@ a {
   object-position: 50% 30%;
 }
 
-.signal-orbit {
+.signal-arc {
   position: absolute;
-  border: 1px solid rgba(105, 230, 255, 0.11);
-  border-radius: 50%;
-}
-
-.orbit-one {
-  top: 2rem;
+  top: 0.5rem;
   right: -2rem;
-  width: 33rem;
-  height: 33rem;
-}
-
-.orbit-two {
-  top: 9rem;
-  right: 6rem;
-  width: 23rem;
-  height: 23rem;
-}
-
-.signal-node {
-  position: absolute;
-  z-index: 3;
-  width: 0.42rem;
-  height: 0.42rem;
+  width: 32rem;
+  height: 32rem;
+  border: 1px solid transparent;
+  border-top-color: rgba(105, 230, 255, 0.12);
+  border-right-color: rgba(105, 230, 255, 0.12);
   border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 1.2rem var(--cyan);
-}
-
-.node-one {
-  top: 2.1rem;
-  right: 31.5rem;
-}
-
-.node-two {
-  right: 1.2rem;
-  bottom: 4.1rem;
-}
-
-.coordinate-label {
-  position: absolute;
-  top: 5rem;
-  left: 0;
-  margin: 0;
-  color: #728b9b;
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  transform: rotate(12deg);
 }
 
 .featured-float {
@@ -1056,10 +1018,6 @@ a {
     margin-inline: auto;
   }
 
-  .coordinate-label {
-    left: 1rem;
-  }
-
   .evidence-band {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1172,12 +1130,7 @@ a {
     width: 88%;
   }
 
-  .coordinate-label,
-  .signal-node {
-    display: none;
-  }
-
-  .orbit-one {
+  .signal-arc {
     right: -11rem;
   }
 

@@ -29,7 +29,12 @@ async function render(
   return worker.fetch(
     new Request(new URL(pathname, "http://localhost"), {
       headers: {
-        accept: pathname === "/robots.txt" ? "text/plain" : "text/html",
+        accept:
+          pathname === "/robots.txt"
+            ? "text/plain"
+            : pathname === "/sitemap.xml"
+              ? "application/xml"
+              : "text/html",
         ...requestHeaders,
       },
     }),
@@ -103,15 +108,27 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /application\/ld\+json/);
   assert.match(
     html,
-    /rel="icon" href="http:\/\/localhost(?::3000)?\/favicon\.ico"/,
+    /rel="icon" href="https:\/\/erichassuncao\.com\/favicon\.ico"/,
   );
   assert.match(
     html,
-    /rel="apple-touch-icon" href="http:\/\/localhost(?::3000)?\/apple-touch-icon\.png"/,
+    /rel="apple-touch-icon" href="https:\/\/erichassuncao\.com\/apple-touch-icon\.png"/,
   );
   assert.match(
     html,
-    /property="og:image" content="http:\/\/localhost(?::3000)?\/og\.jpg"/,
+    /rel="canonical" href="https:\/\/erichassuncao\.com\/"/,
+  );
+  assert.match(
+    html,
+    /property="og:url" content="https:\/\/erichassuncao\.com\/"/,
+  );
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/erichassuncao\.com\/og\.jpg"/,
+  );
+  assert.match(
+    html,
+    /name="twitter:image" content="https:\/\/erichassuncao\.com\/og\.jpg"/,
   );
   assert.match(html, /property="og:image:width" content="1200"/);
   assert.match(html, /property="og:image:height" content="630"/);
@@ -122,6 +139,11 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   );
   assert.match(html, /width="978" height="1254"/);
   assert.match(html, /fetchPriority="high"/);
+  assert.equal([...html.matchAll(/class="signal-arc"/g)].length, 1);
+  assert.doesNotMatch(
+    html,
+    /Technology · Human understanding|coordinate-label|signal-node|signal-orbit|orbit-two|node-two/,
+  );
   assert.match(
     html,
     /sizes="\(max-width: 430px\) 75vw, \(max-width: 680px\) 72vw, 432px"/,
@@ -237,10 +259,13 @@ test("publishes crawl instructions", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/plain\b/i);
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
-  assert.equal(await response.text(), "User-Agent: *\nAllow: /\n");
+  assert.equal(
+    await response.text(),
+    "User-Agent: *\nAllow: /\n\nSitemap: https://erichassuncao.com/sitemap.xml\n",
+  );
 });
 
-test("uses the first trusted proxy host and protocol values", async () => {
+test("uses the permanent production origin regardless of proxy headers", async () => {
   const response = await render("/", {
     "x-forwarded-host": "portfolio.example, internal.example",
     "x-forwarded-proto": "https, http",
@@ -249,12 +274,36 @@ test("uses the first trusted proxy host and protocol values", async () => {
 
   assert.match(
     html,
-    /rel="canonical" href="https:\/\/portfolio\.example\/"/,
+    /rel="canonical" href="https:\/\/erichassuncao\.com\/"/,
   );
   assert.match(
     html,
-    /property="og:image" content="https:\/\/portfolio\.example\/og\.jpg"/,
+    /property="og:url" content="https:\/\/erichassuncao\.com\/"/,
   );
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/erichassuncao\.com\/og\.jpg"/,
+  );
+  assert.match(
+    html,
+    /name="twitter:image" content="https:\/\/erichassuncao\.com\/og\.jpg"/,
+  );
+  assert.doesNotMatch(html, /portfolio\.example|internal\.example/);
+});
+
+test("publishes a sitemap using the permanent production origin", async () => {
+  const response = await render("/sitemap.xml");
+  assert.equal(response.status, 200);
+  assert.match(
+    response.headers.get("content-type") ?? "",
+    /^(?:application|text)\/xml\b/i,
+  );
+
+  const xml = await response.text();
+  assert.match(xml, /<loc>https:\/\/erichassuncao\.com\/<\/loc>/);
+  assert.match(xml, /<changefreq>monthly<\/changefreq>/);
+  assert.match(xml, /<priority>1<\/priority>/);
+  assert.doesNotMatch(xml, /chatgpt\.site|portfolio\.example|localhost/);
 });
 
 test("configures and serves optimized images at their intrinsic widths", async () => {
