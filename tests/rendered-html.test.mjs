@@ -4,14 +4,17 @@ import test from "node:test";
 
 const projectRoot = new URL("../", import.meta.url);
 
-async function render() {
+async function render(pathname = "/", requestHeaders = {}) {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
+    new Request(new URL(pathname, "http://localhost"), {
+      headers: {
+        accept: pathname === "/robots.txt" ? "text/plain" : "text/html",
+        ...requestHeaders,
+      },
     }),
     {
       ASSETS: {
@@ -29,6 +32,15 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.equal(
+    response.headers.get("referrer-policy"),
+    "strict-origin-when-cross-origin",
+  );
+  assert.equal(
+    response.headers.get("permissions-policy"),
+    "camera=(), geolocation=(), microphone=()",
+  );
 
   const html = await response.text();
   assert.match(
@@ -43,6 +55,36 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /7(?:<!-- -->)? case studies/);
   assert.match(html, /188 automated tests with zero external runtime dependencies/);
   assert.match(html, /application\/ld\+json/);
+  assert.match(
+    html,
+    /rel="icon" href="http:\/\/localhost(?::3000)?\/favicon\.ico"/,
+  );
+  assert.match(
+    html,
+    /rel="apple-touch-icon" href="http:\/\/localhost(?::3000)?\/apple-touch-icon\.png"/,
+  );
+  assert.match(
+    html,
+    /property="og:image" content="http:\/\/localhost(?::3000)?\/og\.jpg"/,
+  );
+  assert.match(html, /property="og:image:width" content="1200"/);
+  assert.match(html, /property="og:image:height" content="630"/);
+  assert.match(html, /property="og:image:type" content="image\/jpeg"/);
+  assert.match(
+    html,
+    /src="\/_vinext\/image\?url=%2Fimages%2Ferich-assuncao-portrait\.webp&amp;w=978&amp;q=82"/,
+  );
+  assert.match(html, /width="978" height="1254"/);
+  assert.match(html, /fetchPriority="high"/);
+  assert.match(
+    html,
+    /sizes="\(max-width: 430px\) 75vw, \(max-width: 680px\) 72vw, 432px"/,
+  );
+  assert.match(
+    html,
+    /src="\/_vinext\/image\?url=%2Fproject-covers%2F[^"]+&amp;w=1082&amp;q=75"/,
+  );
+  assert.match(html, /width="1082" height="1400"/);
   assert.match(html, /href="\/erich-assuncao-resume\.pdf"/);
   assert.match(html, /Download résumé \(PDF\)/);
   assert.match(html, /Read case study \(PDF\)/);
@@ -93,11 +135,28 @@ test("server-renders Erich Assuncao's portfolio", async () => {
 test("ships every public case study and social card", async () => {
   const response = await render();
   const html = await response.text();
-  const renderedProjectAssets = [
+  const decodedHtml = html.replaceAll("&amp;", "&");
+  const directProjectAssets = [
     ...new Set(
-      [...html.matchAll(/(?:href|src)="(\/(?:projects|project-covers)\/[^"]+)"/g)]
-        .map((match) => match[1].slice(1)),
+      [...html.matchAll(/href="(\/projects\/[^"]+\.pdf)"/g)].map((match) =>
+        match[1].slice(1),
+      ),
     ),
+  ];
+  const optimizedProjectCovers = [
+    ...new Set(
+      [
+        ...decodedHtml.matchAll(
+          /\/_vinext\/image\?url=([^&"\s]+)&(?:amp;)?w=\d+/g,
+        ),
+      ]
+        .map((match) => decodeURIComponent(match[1]).replace(/^\//, ""))
+        .filter((file) => file.startsWith("project-covers/")),
+    ),
+  ];
+  const renderedProjectAssets = [
+    ...directProjectAssets,
+    ...optimizedProjectCovers,
   ];
   const projectPdfs = renderedProjectAssets.filter((file) =>
     file.endsWith(".pdf"),
@@ -110,12 +169,40 @@ test("ships every public case study and social card", async () => {
   assert.equal(projectCovers.length, 7);
 
   const files = [
-    "public/og.png",
+    "public/og.jpg",
+    "public/favicon.ico",
+    "public/apple-touch-icon.png",
+    "public/images/erich-assuncao-portrait.webp",
     "public/erich-assuncao-resume.pdf",
     ...renderedProjectAssets.map((file) => `public/${file}`),
   ];
 
   await Promise.all(files.map((file) => access(new URL(file, projectRoot))));
+});
+
+test("publishes crawl instructions", async () => {
+  const response = await render("/robots.txt");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/plain\b/i);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.equal(await response.text(), "User-Agent: *\nAllow: /\n");
+});
+
+test("uses the first trusted proxy host and protocol values", async () => {
+  const response = await render("/", {
+    "x-forwarded-host": "portfolio.example, internal.example",
+    "x-forwarded-proto": "https, http",
+  });
+  const html = await response.text();
+
+  assert.match(
+    html,
+    /rel="canonical" href="https:\/\/portfolio\.example\/"/,
+  );
+  assert.match(
+    html,
+    /property="og:image" content="https:\/\/portfolio\.example\/og\.jpg"/,
+  );
 });
 
 test("ships a valid downloadable resume", async () => {

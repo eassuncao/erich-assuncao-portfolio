@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   contactDetails,
   evidenceItems,
@@ -57,12 +58,14 @@ export function Hero() {
           <p className="coordinate-label">Technology · Human understanding</p>
 
           <div className="portrait-frame">
-            <img
-              src="/images/erich-assuncao.png"
-              width="1254"
-              height="1254"
+            <Image
+              src="/images/erich-assuncao-portrait.webp"
+              width={978}
+              height={1254}
               alt={`Portrait of ${contactDetails.name}`}
-              fetchPriority="high"
+              priority
+              quality={82}
+              sizes="(max-width: 430px) 75vw, (max-width: 680px) 72vw, 432px"
             />
           </div>
 

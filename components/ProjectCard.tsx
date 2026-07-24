@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Project } from "../data/portfolio";
 
 type ProjectCardProps = {
@@ -26,13 +27,17 @@ export function ProjectCard({
         rel="noreferrer"
         aria-label={`Open ${project.title} case study PDF (opens in a new tab)`}
       >
-        <img
+        <Image
           src={project.cover}
           alt={`Cover of the ${project.title} case study`}
-          width="990"
-          height="1400"
-          loading="lazy"
-          decoding="async"
+          width={1082}
+          height={1400}
+          quality={75}
+          sizes={
+            project.featured
+              ? "(max-width: 680px) calc(100vw - 2rem), (max-width: 1180px) calc(100vw - 9rem), min(32vw, 460px)"
+              : "(max-width: 680px) calc(100vw - 2rem), (max-width: 900px) calc(100vw - 7.4rem), (max-width: 1180px) calc(50vw - 6rem), 224px"
+          }
         />
         <span className="project-number">{project.number}</span>
         <span className="cover-action" aria-hidden="true">

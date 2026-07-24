@@ -10,7 +10,7 @@ The following are excluded from the MIT Licence:
 - names, logos, branding, and identity materials;
 - project PDFs and case-study documents under `public/projects/`;
 - screenshots, portfolio covers, and images under `public/project-covers/`;
-- social-preview imagery, including `public/og.png`;
+- social-preview imagery, including `public/og.jpg`;
 - authored portfolio copy, descriptions, research summaries, and other
   original textual content, regardless of the file in which they appear.
 
