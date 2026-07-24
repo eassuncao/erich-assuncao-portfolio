@@ -1,4 +1,16 @@
-const projects = [
+type Project = {
+  readonly number: string;
+  readonly title: string;
+  readonly eyebrow: string;
+  readonly description: string;
+  readonly result: string;
+  readonly tags: readonly string[];
+  readonly href: string;
+  readonly cover: string;
+  readonly featured?: boolean;
+};
+
+const projects: readonly Project[] = [
   {
     number: "01",
     title: "User Connections & Discovery",
@@ -66,7 +78,18 @@ const projects = [
     href: "/projects/beyond-pointsification-atid.pdf",
     cover: "/project-covers/beyond-pointsification-atid.png",
   },
-] as const;
+  {
+    number: "07",
+    title: "FASTA Inspector",
+    eyebrow: "Bioinformatics sequence-analysis CLI",
+    description:
+      "Built a dependency-free Python tool that parses mixed FASTA files, classifies each sequence as DNA/RNA or protein, and applies the appropriate composition and sequence metrics automatically.",
+    result: "188 automated tests with zero external runtime dependencies",
+    tags: ["Python", "Bioinformatics", "FASTA", "CLI", "pytest"],
+    href: "/projects/fasta-inspector-bioinformatics.pdf",
+    cover: "/project-covers/fasta-inspector-bioinformatics.png",
+  },
+];
 
 const skillGroups = [
   {
@@ -90,6 +113,9 @@ const skillGroups = [
   },
 ] as const;
 
+const LINKEDIN_URL =
+  "https://www.linkedin.com/in/erich-assuncao-69a9b01bb";
+
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -108,7 +134,7 @@ const personSchema = {
     },
   ],
   sameAs: [
-    "https://www.linkedin.com/in/erich-a-69a9b01bb",
+    LINKEDIN_URL,
     "https://github.com/eassuncao",
   ],
 };
@@ -140,7 +166,7 @@ export default function Home() {
 
         <a className="header-status" href="#contact">
           <span aria-hidden="true" />
-          Open across Canada
+          Let&apos;s connect
         </a>
       </header>
 
@@ -257,7 +283,7 @@ export default function Home() {
               <h2>Evidence, not just a tool list.</h2>
             </div>
             <p>
-              Six case studies showing how I frame a problem, make technical
+              Seven case studies showing how I frame a problem, make technical
               decisions, and translate the result into something useful.
             </p>
           </div>
@@ -495,7 +521,7 @@ export default function Home() {
             </a>
             <a
               className="button button-secondary"
-              href="https://www.linkedin.com/in/erich-a-69a9b01bb"
+              href={LINKEDIN_URL}
               target="_blank"
               rel="noreferrer"
             >

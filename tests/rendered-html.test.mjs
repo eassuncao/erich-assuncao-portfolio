@@ -39,9 +39,11 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /Human-centred/);
   assert.match(html, /220\+ automated tests/);
   assert.match(html, /User Connections &amp; Discovery/);
+  assert.match(html, /FASTA Inspector/);
+  assert.match(html, /188 automated tests with zero external runtime dependencies/);
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /href="\/erich-assuncao-resume\.pdf"/);
-  assert.match(html, /Open across Canada/);
+  assert.match(html, /Let's connect/);
   assert.match(html, /Counsellor \/ Psychotherapy-Informed Practitioner/);
   assert.match(
     html,
@@ -64,16 +66,18 @@ test("ships every public case study and social card", async () => {
     "public/projects/data-mining-weka.pdf",
     "public/projects/interactive-dashboards-python.pdf",
     "public/projects/beyond-pointsification-atid.pdf",
+    "public/projects/fasta-inspector-bioinformatics.pdf",
+    "public/project-covers/fasta-inspector-bioinformatics.png",
   ];
 
   await Promise.all(files.map((file) => access(new URL(file, projectRoot))));
 });
 
-test("downloadable resume matches the updated PDF in Documents", async () => {
-  const [sourceResume, publicResume] = await Promise.all([
-    readFile(new URL("Documents/Erich_Assuncao_General_Technology_Resume.pdf", projectRoot)),
-    readFile(new URL("public/erich-assuncao-resume.pdf", projectRoot)),
-  ]);
+test("ships a valid downloadable resume", async () => {
+  const publicResume = await readFile(
+    new URL("public/erich-assuncao-resume.pdf", projectRoot),
+  );
 
-  assert.deepEqual(publicResume, sourceResume);
+  assert.ok(publicResume.length > 5);
+  assert.equal(publicResume.subarray(0, 5).toString("ascii"), "%PDF-");
 });

@@ -437,7 +437,7 @@ a {
 
 .featured-float {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: -1rem;
   left: -1rem;
   z-index: 4;
   display: grid;
