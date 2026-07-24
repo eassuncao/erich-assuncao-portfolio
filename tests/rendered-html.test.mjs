@@ -144,9 +144,16 @@ test("server-renders Erich Assuncao's portfolio", async () => {
   assert.match(html, /Opens in a new tab\./);
   assert.match(html, /Let's connect/);
   assert.match(html, /Counsellor \/ Psychotherapy-Informed Practitioner/);
+  assert.match(html, /Software Engineer · iQuirium/);
+  assert.match(html, /2024(?:<!-- -->)?—(?:<!-- -->)?2026/);
+  assert.match(html, /E-commerce Store Owner · The Buyer’s Haven \(Amazon FBA\)/);
   assert.match(
     html,
-    /healthcare, legal, community[\s\S]*social work,[\s\S]*education settings/i,
+    /Graduate Certificate in Information Technology Management/,
+  );
+  assert.match(
+    html,
+    /healthcare, legal, community, settlement, education, and faith-based settings/i,
   );
   assert.doesNotMatch(
     html,

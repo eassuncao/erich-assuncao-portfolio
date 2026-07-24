@@ -210,22 +210,28 @@ export const skillGroups: readonly LabelledDetail[] = [
 
 export const experienceItems: readonly TimelineItem[] = [
   {
-    period: "2024—Present",
+    period: "2024—2026",
     title: "Software Engineer · iQuirium",
     description:
-      "Part-time, remote. Built production features across C#, ASP.NET Core, REST APIs, PostgreSQL, TypeScript, Next.js, and React.",
+      "Part-time, remote. Built production full-stack features across C#, ASP.NET Core, REST APIs, PostgreSQL, TypeScript, Next.js, and React, including a privacy-aware connections and discovery capability backed by approximately 220 tests.",
   },
   {
     period: "2022—Present",
     title: "Counsellor / Psychotherapy-Informed Practitioner",
     description:
-      "Provide structured, confidential support in English and Portuguese, with careful listening, organized documentation, and clear explanations of complex information.",
+      "Provide individual counselling and psychology-informed support in Portuguese and English using active listening, structured reflection, careful documentation, and confidentiality-aware practice.",
   },
   {
     period: "2014—Present",
     title: "English–Portuguese Interpreter",
     description:
-      "Professional interpretation across healthcare, legal, community and social work, and education settings—requiring accuracy, confidentiality, rapid comprehension, and clear communication.",
+      "Provide professional interpretation across healthcare, legal, community, settlement, education, and faith-based settings, requiring accuracy, confidentiality, adaptability, and clear cross-cultural communication.",
+  },
+  {
+    period: "2017—2021",
+    title: "E-commerce Store Owner · The Buyer’s Haven (Amazon FBA)",
+    description:
+      "Designed and operated a fully remote Amazon FBA business using outsourced product sourcing and data entry, third-party logistics, inventory and financial reporting, and automated repricing.",
   },
 ];
 
@@ -235,6 +241,12 @@ export const educationItems: readonly TimelineItem[] = [
     title: "MSc Computing & Information Systems",
     description:
       "Athabasca University · All requirements completed · 3.97 / 4.00 GPA.",
+  },
+  {
+    period: "2023—2024",
+    title: "Graduate Certificate in Information Technology Management",
+    description:
+      "Athabasca University · A in all four courses · Laddered into the MSc program.",
   },
   {
     period: "2019—2023",
